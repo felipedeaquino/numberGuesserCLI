@@ -1,10 +1,10 @@
-import readline from 'node:readline';
 import { levels, options, rules, texts } from './config.mjs';
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+import { formatMessage, promptMessage } from './message.mjs';
+import {
+  rl,
+  promptUserForValidInput,
+  getInput
+} from './input.mjs';
   
 let answer;
 let difficultyLevel;
@@ -77,48 +77,6 @@ function compare(guess) {
   }
   return true;
 }
-
-function isValidInput(value, rules) {
-  return rules.every(rule => rule(value));
-}
-
-async function promptUserForValidInput({ value, type, text, rules = [], invalid }) {
-  while (true) {
-    value = await getInput({ text });
-
-    if (isValidInput(value, rules)) {
-      return value;
-    }
-
-    promptMessage(
-      formatInvalidInputPrompt({ 
-        template: invalid,
-        min: options[type].min,
-        max: options[type].max
-      }) 
-    );  
-  }
-}
-
-async function getInput({ text, isNumber = true }) {
-  return new Promise((resolve) => {
-    rl.question(text, (input) => {
-      resolve(isNumber ? Number(input) : input);
-    });
-  });
-}
-
-function formatInvalidInputPrompt({ template, min, max }) {
-  return template.replace('{min}', min).replace('{max}', max);
-}
-
-function formatMessage({ text, value }) {
-  return text.replace('{difficulty}', levels[value].difficulty);
-}
-
-function promptMessage(text) {
-  console.log(text); 
- }
 
 (async () => {
   await initGame();
