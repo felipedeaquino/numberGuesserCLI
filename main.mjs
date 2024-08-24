@@ -12,16 +12,21 @@ let attempts;
 let guess;
 
 async function initGame() {
-  console.log(texts.welcomeMessage);
-  console.log(texts.difficultyMenu);
-  difficultyLevel = await getFromUser({
+  promptMessage(texts.welcomeMessage);
+  promptMessage(texts.difficultyMenu);
+  difficultyLevel = await setDifficulty();
+  promptMessage(formatMessage({ text: texts.difficultySelected, value: difficultyLevel }));
+  await playGame();
+}
+
+async function setDifficulty() {
+  return promptUserForValidInput({
     value: difficultyLevel,
     type: 'difficulty',
     text: texts.choiceTemplate,
     rules: [rules.isInRange(options.difficulty.min, options.difficulty.max)],
     invalid: texts.invalidInput
   });
-  console.log(`\nGreat! You have selected the ${levels[difficultyLevel].difficulty} difficulty level.\nLet's start the game!`)   
 }
 
 async function playGame() {
@@ -31,7 +36,7 @@ async function playGame() {
   let compared = false;
 
   while (attempts < levels[difficultyLevel].attempts && !compared){
-    guess = await getFromUser({
+    guess = await promptUserForValidInput({
       value: guess,
       type: 'guess',
       text: texts.guessLine,
@@ -73,17 +78,20 @@ function compare(guess) {
   return true;
 }
 
-async function getFromUser({ value, type, text, rules = [], invalid }) {
+function isValidInput(value, rules) {
+  return rules.every(rule => rule(value));
+}
+
+async function promptUserForValidInput({ value, type, text, rules = [], invalid }) {
   while (true) {
     value = await getInput({ text });
-  
-    const isValid = rules.every(rule => rule(value));
-    if (isValid) {
+
+    if (isValidInput(value, rules)) {
       return value;
     }
 
-    console.log(
-      formatInvalidInput({ 
+    promptMessage(
+      formatInvalidInputPrompt({ 
         template: invalid,
         min: options[type].min,
         max: options[type].max
@@ -100,11 +108,18 @@ async function getInput({ text, isNumber = true }) {
   });
 }
 
-function formatInvalidInput({ template, min, max }) {
+function formatInvalidInputPrompt({ template, min, max }) {
   return template.replace('{min}', min).replace('{max}', max);
 }
 
+function formatMessage({ text, value }) {
+  return text.replace('{difficulty}', levels[value].difficulty);
+}
+
+function promptMessage(text) {
+  console.log(text); 
+ }
+
 (async () => {
   await initGame();
-  await playGame();
 })()

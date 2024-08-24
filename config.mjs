@@ -22,6 +22,7 @@ I'm thinking of a number between ${options.guess.min} and ${options.guess.max}.\
     .join('\n')
   }\n`,
   invalidInput: `Invalid input. Please enter a number between {min} and {max}.\n`,
+  difficultySelected: `\nGreat! You have selected the {difficulty} difficulty level.\nLet's start the game!\n`,
   choiceTemplate: `Enter your choice: `,
   guessLine: `Enter your guess: `,
   playAgain: 'Would you like to play again? (Yes/No) '
