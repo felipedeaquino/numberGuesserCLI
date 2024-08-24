@@ -1,14 +1,5 @@
 import readline from 'node:readline';
-import {
-  welcomeMessage,
-  difficultyMenu,
-  invalidInput,
-  choiceTemplate,
-  guessLine,
-  attemptsPerDifficulty,
-  translateDifficulty,
-  playAgain,
-} from './assets.mjs';
+import { levels,texts } from './config.mjs';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -28,10 +19,10 @@ const difficultyRules = (difficultyLevel) => [1, 2, 3].includes(difficultyLevel)
 const guessRules = (guess) => Number(guess) >= guessMin && Number(guess) <= guessMax && !Number.isNaN(guess);
 
 async function initGame() {
-  console.log(welcomeMessage);
-  console.log(difficultyMenu);
-  difficultyLevel = await getFromUser({ min: difficultyMin, max: difficultyMax, value: difficultyLevel, text: choiceTemplate, rules: difficultyRules, invalid: invalidInput });
-  console.log(`\nGreat! You have selected the ${translateDifficulty[difficultyLevel]} difficulty level.\nLet's start the game!`)   
+  console.log(texts.welcomeMessage);
+  console.log(texts.difficultyMenu);
+  difficultyLevel = await getFromUser({ min: difficultyMin, max: difficultyMax, value: difficultyLevel, text: texts.choiceTemplate, rules: difficultyRules, invalid: texts.invalidInput });
+  console.log(`\nGreat! You have selected the ${levels[difficultyLevel].difficulty} difficulty level.\nLet's start the game!`)   
 }
 
 async function playGame() {
@@ -40,8 +31,8 @@ async function playGame() {
 
   let compared = false;
 
-  while (attempts < attemptsPerDifficulty[difficultyLevel] && !compared){
-    guess = await getFromUser({ min: guessMin, max: guessMax, value: guess, text: guessLine, rules: guessRules, invalid: invalidInput });
+  while (attempts < levels[difficultyLevel].attempts && !compared){
+    guess = await getFromUser({ min: guessMin, max: guessMax, value: guess, text: texts.guessLine, rules: guessRules, invalid: texts.invalidInput });
     compared = compare(guess);
     attempts++;
   }
@@ -57,7 +48,7 @@ async function playGame() {
 
 async function wannaPlayAgain() {
   let answer;
-  do { answer = await getInput({ text: playAgain, isNumber: false});
+  do { answer = await getInput({ text: texts.playAgain, isNumber: false});
   } while (!['YES', 'Y', 'NO', 'N'].includes(answer.toUpperCase()));
 
   if (answer.toUpperCase() === 'YES' || answer.toUpperCase() === 'Y') {
