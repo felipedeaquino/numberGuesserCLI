@@ -7,19 +7,19 @@ import {
 } from './input.mjs';
   
 let answer;
-let difficultyLevel;
 let attempts;
 let guess;
 
 async function initGame() {
   promptMessage(texts.welcomeMessage);
   promptMessage(texts.difficultyMenu);
-  difficultyLevel = await setDifficulty();
+  const difficultyLevel = await setDifficulty();
   promptMessage(formatMessage({ text: texts.difficultySelected, value: difficultyLevel }));
-  await playGame();
+  await playGame(difficultyLevel);
 }
 
 async function setDifficulty() {
+  let difficultyLevel;
   return promptUserForValidInput({
     value: difficultyLevel,
     type: 'difficulty',
@@ -29,7 +29,7 @@ async function setDifficulty() {
   });
 }
 
-async function playGame() {
+async function playGame(difficultyLevel) {
   attempts = 0;
   answer = Math.floor(Math.random() * options.guess.max) + 1;
 
@@ -53,17 +53,17 @@ async function playGame() {
     console.log('You fucking lose. Loser.\n');
   }
   
-  await askToPlayAgain();
+  await askToPlayAgain(difficultyLevel);
 }
 
-async function askToPlayAgain() {
+async function askToPlayAgain(difficultyLevel) {
   let continueGame;
   do { continueGame = await getInput({ text: texts.playAgain, isNumber: false});
   } while (!['YES', 'Y', 'NO', 'N'].includes(continueGame.toUpperCase()));
 
   if (continueGame.toUpperCase() === 'YES' || continueGame.toUpperCase() === 'Y') {
     await initGame();
-    await playGame();
+    await playGame(difficultyLevel);
   } else {
     console.log('Thanks for playing!');
     rl.close();

@@ -1,5 +1,6 @@
 import readline from 'node:readline';
 import { options } from './config.mjs';
+import { formatInvalidInputPrompt, promptMessage } from './message.mjs';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -39,5 +40,6 @@ async function getInput({ text, isNumber = true }) {
 export {
   isValidInput,
   promptUserForValidInput,
-  getInput
+  getInput,
+  rl
 }
