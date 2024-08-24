@@ -24,6 +24,8 @@ const translateDifficulty = {
   3: 'Hard'
 }
 
+const playAgain = 'Would you like to play again? (Yes/No) '
+
 export {
   welcomeMessage,
   difficultyMenu,
@@ -32,4 +34,5 @@ export {
   guessLine,
   attemptsPerDifficulty,
   translateDifficulty,
+  playAgain,
 }

@@ -7,13 +7,14 @@ import {
   guessLine,
   attemptsPerDifficulty,
   translateDifficulty,
+  playAgain,
 } from './assets.mjs';
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
+  
 let answer;
 let difficultyLevel;
 let attempts;
@@ -21,7 +22,7 @@ let attempts;
 async function initGame() {
   console.log(welcomeMessage);
   console.log(difficultyMenu);
-  difficultyLevel = await getLevel();
+  difficultyLevel = await getInput({ text: choiceTemplate });
   await checkDifficulty(difficultyLevel);
   console.log(`\nGreat! You have selected the ${translateDifficulty[difficultyLevel]} difficulty level.\nLet's start the game!`)   
 }
@@ -33,7 +34,7 @@ async function playGame() {
   let compared = false;
 
   while (attempts < attemptsPerDifficulty[difficultyLevel] && !compared){
-    const guess = await getChoice();
+    const guess = await getInput({ text: choiceTemplate });
     await checkGuess(guess);
     compared = compare(guess);
     attempts++;
@@ -50,12 +51,7 @@ async function playGame() {
 
 async function wannaPlayAgain() {
   let answer;
-  do {
-    answer = await new Promise((resolve) => {
-      rl.question('Would you like to play again? (Yes/No) ', (input) => {
-        resolve(input);
-      });
-    })
+  do { answer = await getInput({ text: playAgain, isNumber: false});
   } while (!['YES', 'Y', 'NO', 'N'].includes(answer.toUpperCase()));
 
   if (answer.toUpperCase() === 'YES' || answer.toUpperCase() === 'Y') {
@@ -67,35 +63,18 @@ async function wannaPlayAgain() {
   }
 }
 
-function getLevel() {
-  return new Promise((resolve) => {
-    rl.question(choiceTemplate, (input) => {
-      resolve(Number(input));
-    });
-  });
-}
-
 async function checkDifficulty(difficultyLevel) {
   while (![1, 2, 3].includes(difficultyLevel)) {
     console.log(invalidInput);
-    difficultyLevel = await getLevel();
+    difficultyLevel = await getInput({ text: choiceTemplate });
   }
   return difficultyLevel;
 }
 
-
-function getChoice() {
-  return new Promise((resolve) => {
-    rl.question(guessLine, (input) => {
-      resolve(Number(input));
-    });
-  });
-}
-
-async function checkGuess(guess) {
+async function checkGuess(guess) {  
   while (Number(guess) <= 0 || Number(guess) > 100 || Number.isNaN(guess)) {
     console.log('Invalid input. Please enter a number between 1 and 100.\n');
-    guess = await getChoice();
+    guess = await getInput({ text: guessLine });
   }
 }
 
@@ -106,6 +85,14 @@ function compare(guess) {
   }
   return true;
 }
+
+async function getInput({ text, isNumber = true }) {
+  return new Promise((resolve) => {
+    rl.question(text, (input) => {
+      isNumber? resolve(Number(input)) : resolve(input);
+    });
+  });
+};
 
 (async () => {
   await initGame();
