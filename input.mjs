@@ -11,21 +11,23 @@ function isValidInput(value, rules) {
   return rules.every(rule => rule(value));
 }
 
-async function promptUserForValidInput({ value, type, text, rules = [], invalid }) {
+async function promptUserForValidInput({ value, type = null, text, rules = [], invalid, isNumber = true }) {
   while (true) {
-    value = await getInput({ text });
+    isNumber ? value = await getInput({ text }) : value = await getInput({ text, isNumber: false });
 
     if (isValidInput(value, rules)) {
       return value;
     }
 
     promptMessage(
-      formatInvalidInputPrompt({ 
+      isNumber
+      ? formatInvalidInputPrompt({ 
         template: invalid,
         min: options[type].min,
         max: options[type].max
-      }) 
-    );  
+      })  
+      : promptMessage(invalid)
+    )
   }
 }
 

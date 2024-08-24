@@ -1,10 +1,6 @@
 import { levels, options, rules, texts } from './config.mjs';
 import { formatMessage, promptMessage } from './message.mjs';
-import {
-  rl,
-  promptUserForValidInput,
-  getInput
-} from './input.mjs';
+import { rl, promptUserForValidInput } from './input.mjs';
   
 let answer;
 let attempts;
@@ -38,7 +34,6 @@ async function playGame(difficultyLevel) {
   while (attempts < levels[difficultyLevel].attempts && !compared){
     guess = await promptUserForValidInput({
       value: guess,
-      type: 'guess',
       text: texts.guessLine,
       rules: [rules.isInRange(options.guess.min, options.guess.max)],
       invalid: texts.invalidInput
@@ -50,22 +45,27 @@ async function playGame(difficultyLevel) {
   if (compared) {
     console.log(`Congratulations! You guessed the correct number in ${attempts} attempts.\n`)
   }  else {
-    console.log('You fucking lose. Loser.\n');
+    promptMessage(texts.gameOverMessage)
   }
   
   await askToPlayAgain(difficultyLevel);
 }
 
-async function askToPlayAgain(difficultyLevel) {
+async function askToPlayAgain() {
   let continueGame;
-  do { continueGame = await getInput({ text: texts.playAgain, isNumber: false});
-  } while (!['YES', 'Y', 'NO', 'N'].includes(continueGame.toUpperCase()));
+  continueGame = await promptUserForValidInput({
+    value: continueGame,
+    type: 'continue',
+    text: texts.playAgain,
+    rules: [rules.isValidContinueInput],
+    invalid: texts.invalidContinue,
+    isNumber: false
+  });
 
   if (continueGame.toUpperCase() === 'YES' || continueGame.toUpperCase() === 'Y') {
     await initGame();
-    await playGame(difficultyLevel);
   } else {
-    console.log('Thanks for playing!');
+    promptMessage(texts.greetings);
     rl.close();
   }
 }

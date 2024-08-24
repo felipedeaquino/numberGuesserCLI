@@ -11,6 +11,7 @@ const options = {
 
 const rules = {
   isInRange: (min, max) => value => Number(value) >= min && Number(value) <= max,
+  isValidContinueInput: () => input => !['YES', 'Y', 'NO', 'N'].includes(String(input).toUpperCase())
 }
 
 const texts = {
@@ -25,7 +26,10 @@ I'm thinking of a number between ${options.guess.min} and ${options.guess.max}.\
   difficultySelected: `\nGreat! You have selected the {difficulty} difficulty level.\nLet's start the game!\n`,
   choiceTemplate: `Enter your choice: `,
   guessLine: `Enter your guess: `,
-  playAgain: 'Would you like to play again? (Yes/No) '
+  playAgain: 'Would you like to play again? (Yes/No) ',
+  gameOverMessage: 'You fucking lose. Loser.\n',
+  greetings: 'Thanks for playing!', 
+  invalidContinue: `Invalid input. Please enter 'yes', 'y', 'no' or 'n' to continue.\n`
 }
 
 export {
