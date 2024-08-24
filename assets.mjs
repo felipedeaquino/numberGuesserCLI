@@ -6,7 +6,7 @@ const difficultyMenu = `Please select the difficulty level:
 2. Medium (5 chances)
 3. Hard (3 chances)\n`;
 
-const invalidInput = `Invalid input. Please enter a number between 1 and 3.\n`
+const invalidInput = `Invalid input. Please enter a number between {min} and {max}.\n`
 
 const choiceTemplate = `Enter your choice: `;
 
