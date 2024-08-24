@@ -22,7 +22,7 @@ let guess;
 let guessMin = 1;
 let guessMax = 100;
 let difficultyMin = 1;
-let difficultyMax = 100;
+let difficultyMax = 3;
 
 const difficultyRules = (difficultyLevel) => [1, 2, 3].includes(difficultyLevel);
 const guessRules = (guess) => Number(guess) >= guessMin && Number(guess) <= guessMax && !Number.isNaN(guess);
