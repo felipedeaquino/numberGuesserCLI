@@ -13,21 +13,21 @@ function isValidInput(value, rules) {
 
 async function promptUserForValidInput({ value, type = null, text, rules = [], invalid, isNumber = true }) {
   while (true) {
-    isNumber ? value = await getInput({ text }) : value = await getInput({ text, isNumber: false });
+    value = await getInput({ text, isNumber });
 
     if (isValidInput(value, rules)) {
       return value;
     }
 
-    promptMessage(
-      isNumber
-      ? formatInvalidInputPrompt({ 
+    if (isNumber) {
+      promptMessage(formatInvalidInputPrompt({ 
         template: invalid,
         min: options[type].min,
         max: options[type].max
-      })  
-      : promptMessage(invalid)
-    )
+      }));
+    } else {
+      promptMessage(invalid);
+    }
   }
 }
 

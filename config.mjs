@@ -11,7 +11,8 @@ const options = {
 
 const rules = {
   isInRange: (min, max) => value => Number(value) >= min && Number(value) <= max,
-  isValidContinueInput: () => input => !['YES', 'Y', 'NO', 'N'].includes(String(input).toUpperCase())
+  isValidContinueInput: (input) => ['YES', 'Y', 'NO', 'N'].includes(String(input).toUpperCase()),
+  isContinue: (input) => String(input).toUpperCase() === 'YES' || String(input).toUpperCase() === 'Y',
 }
 
 const texts = {

@@ -34,6 +34,7 @@ async function playGame(difficultyLevel) {
   while (attempts < levels[difficultyLevel].attempts && !compared){
     guess = await promptUserForValidInput({
       value: guess,
+      type: 'guess',
       text: texts.guessLine,
       rules: [rules.isInRange(options.guess.min, options.guess.max)],
       invalid: texts.invalidInput
@@ -55,14 +56,13 @@ async function askToPlayAgain() {
   let continueGame;
   continueGame = await promptUserForValidInput({
     value: continueGame,
-    type: 'continue',
     text: texts.playAgain,
     rules: [rules.isValidContinueInput],
     invalid: texts.invalidContinue,
     isNumber: false
   });
 
-  if (continueGame.toUpperCase() === 'YES' || continueGame.toUpperCase() === 'Y') {
+  if (rules.isContinue(continueGame)) {
     await initGame();
   } else {
     promptMessage(texts.greetings);

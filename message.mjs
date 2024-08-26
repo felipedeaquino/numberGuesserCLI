@@ -10,7 +10,7 @@ function formatMessage({ text, value }) {
 
 function promptMessage(text) {
   console.log(text); 
- }
+}
 
 export {
   formatInvalidInputPrompt,
