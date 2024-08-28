@@ -1,15 +1,8 @@
-import { levels } from './config.mjs';
-
-function formatInvalidInputPrompt({ template, min, max }) {
-  return template.replace('{min}', min).replace('{max}', max);
-}
-
-function formatMessage({ text, value }) {
-  return text.replace('{difficulty}', levels[value].difficulty);
-}
-
-function formatCongratulations({ text, value}) {
-  return text.replace('{attempts}', value);
+function formatText({ text, variables }) {
+  Object.keys(variables).forEach(key => {
+    text = text.replace(`{${key}}`, variables[key]);
+  });
+  return text;
 }
 
 function promptMessage(text) {
@@ -17,8 +10,6 @@ function promptMessage(text) {
 }
 
 export {
-  formatInvalidInputPrompt,
-  formatMessage,
-  formatCongratulations,
+  formatText,
   promptMessage,
 }

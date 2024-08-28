@@ -29,9 +29,10 @@ I'm thinking of a number between ${options.guess.min} and ${options.guess.max}.\
   guessLine: 'Enter your guess: ',
   playAgain: 'Would you like to play again? (Yes/No) ',
   gameOverMessage: 'You fucking lose. Loser.\n',
-  greetings: 'Thanks for playing!', 
+  greetings: '\nThanks for playing!', 
   invalidContinue: 'Invalid input. Please enter "yes", "y", "no" or "n" to continue.\n',
-  congratulations: 'Congratulations! You guessed the correct number in {attempts} attempts.\n'
+  congratulations: 'Congratulations! You guessed the correct number in {attempts} attempts.\n',
+  numberComparison: 'Incorrect! The number is {compared} than {guess}.\n',
 }
 
 export {

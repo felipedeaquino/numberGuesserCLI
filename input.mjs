@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 import { options } from './config.mjs';
-import { formatInvalidInputPrompt, promptMessage } from './message.mjs';
+import { formatText, promptMessage } from './message.mjs';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -20,10 +20,13 @@ async function promptUserForValidInput({ value, type = null, text, rules = [], i
     }
 
     if (isNumber) {
-      promptMessage(formatInvalidInputPrompt({ 
-        template: invalid,
-        min: options[type].min,
-        max: options[type].max
+      promptMessage(formatText({ 
+        text: invalid,
+        variables:
+          {
+            min: options[type].min,
+            max: options[type].max
+          }
       }));
     } else {
       promptMessage(invalid);
