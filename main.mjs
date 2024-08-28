@@ -1,37 +1,18 @@
 import { levels, options, rules, texts } from './config.mjs';
-import { formatMessage, promptMessage } from './message.mjs';
+import { formatMessage, promptMessage, formatCongratulations } from './message.mjs';
 import { rl, promptUserForValidInput } from './input.mjs';
-  
+import { getAnswer, setDifficulty } from './utils.mjs';
+
 let answer;
 let attempts;
 let guess;
 
-async function initGame() {
-  promptMessage(texts.welcomeMessage);
-  promptMessage(texts.difficultyMenu);
-  const difficultyLevel = await setDifficulty();
-  promptMessage(formatMessage({ text: texts.difficultySelected, value: difficultyLevel }));
-  await playGame(difficultyLevel);
-}
-
-async function setDifficulty() {
-  let difficultyLevel;
-  return promptUserForValidInput({
-    value: difficultyLevel,
-    type: 'difficulty',
-    text: texts.choiceTemplate,
-    rules: [rules.isInRange(options.difficulty.min, options.difficulty.max)],
-    invalid: texts.invalidInput
-  });
-}
-
 async function playGame(difficultyLevel) {
   attempts = 0;
-  answer = Math.floor(Math.random() * options.guess.max) + 1;
 
-  let compared = false;
+  let isRightAnswer = false;
 
-  while (attempts < levels[difficultyLevel].attempts && !compared){
+  while (attempts < levels[difficultyLevel].attempts && !isRightAnswer){
     guess = await promptUserForValidInput({
       value: guess,
       type: 'guess',
@@ -39,12 +20,12 @@ async function playGame(difficultyLevel) {
       rules: [rules.isInRange(options.guess.min, options.guess.max)],
       invalid: texts.invalidInput
     });
-    compared = compare(guess);
+    isRightAnswer = evaluateAnswer(guess);
     attempts++;
   }
 
-  if (compared) {
-    console.log(`Congratulations! You guessed the correct number in ${attempts} attempts.\n`)
+  if (isRightAnswer) {
+    promptMessage(formatCongratulations({ text: texts.congratulations, value: attempts }))
   }  else {
     promptMessage(texts.gameOverMessage)
   }
@@ -70,7 +51,7 @@ async function askToPlayAgain() {
   }
 }
 
-function compare(guess) {
+function evaluateAnswer(guess) {
   if (guess !== answer) {;
     console.log(`Incorrect! The number is ${guess > answer ? 'less than' : 'greater than'} ${guess}.\n`)
     return false;
@@ -79,5 +60,10 @@ function compare(guess) {
 }
 
 (async () => {
-  await initGame();
+  promptMessage(texts.welcomeMessage);
+  promptMessage(texts.difficultyMenu);
+  const difficultyLevel = await setDifficulty();
+  promptMessage(formatMessage({ text: texts.difficultySelected, value: difficultyLevel }));
+  answer = getAnswer();
+  await playGame(difficultyLevel);
 })()

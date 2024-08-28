@@ -23,14 +23,15 @@ I'm thinking of a number between ${options.guess.min} and ${options.guess.max}.\
     .map(key => `${key}. ${levels[key].difficulty} (${levels[key].attempts} chances)`)
     .join('\n')
   }\n`,
-  invalidInput: `Invalid input. Please enter a number between {min} and {max}.\n`,
-  difficultySelected: `\nGreat! You have selected the {difficulty} difficulty level.\nLet's start the game!\n`,
-  choiceTemplate: `Enter your choice: `,
-  guessLine: `Enter your guess: `,
+  invalidInput: 'Invalid input. Please enter a number between {min} and {max}.\n',
+  difficultySelected: "\nGreat! You have selected the {difficulty} difficulty level.\nLet's start the game!\n",
+  choiceTemplate: 'Enter your choice: ',
+  guessLine: 'Enter your guess: ',
   playAgain: 'Would you like to play again? (Yes/No) ',
   gameOverMessage: 'You fucking lose. Loser.\n',
   greetings: 'Thanks for playing!', 
-  invalidContinue: `Invalid input. Please enter 'yes', 'y', 'no' or 'n' to continue.\n`
+  invalidContinue: 'Invalid input. Please enter "yes", "y", "no" or "n" to continue.\n',
+  congratulations: 'Congratulations! You guessed the correct number in {attempts} attempts.\n'
 }
 
 export {
