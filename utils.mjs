@@ -1,7 +1,16 @@
 import { rl, promptUserForValidInput } from './input.mjs';
 import { promptMessage, formatText } from './message.mjs';
 import { levels, options, rules, texts } from './config.mjs';
-import { initGame } from './main.mjs';
+
+async function initGame() {
+  promptMessage(texts.welcomeMessage);
+  promptMessage(texts.difficultyMenu);
+  const difficultyLevel = await setDifficulty();
+  promptMessage(formatText({ text: texts.difficultySelected, variables: { difficulty: levels[difficultyLevel].difficulty } }));
+  const answer = getAnswer();
+  await playGame(answer, difficultyLevel);
+  await askToPlayAgain();
+};
 
 async function playGame(answer, difficultyLevel) {
   let attempts = 0;
@@ -73,6 +82,7 @@ export {
   askToPlayAgain,
   evaluateAnswer,
   getAnswer,
+  initGame,
   playGame,
   setDifficulty
 }
